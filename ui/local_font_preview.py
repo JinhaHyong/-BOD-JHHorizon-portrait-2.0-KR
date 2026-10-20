@@ -1,10 +1,11 @@
-"""Native single-line local font previews using the same four online card colors."""
+"""Native single-line local font previews in four color combinations."""
 
 from PySide6.QtCore import QRectF, Qt
 from PySide6.QtGui import QColor, QFont, QFontMetricsF, QPainter, QPalette, QPen
 from PySide6.QtWidgets import QWidget
 
-from ui.font_preview import FontPreview
+PREVIEW_COLORS = (('#ffffff', '#172033'), ('#172033', '#ffffff'),
+                  ('#172033', '#e7c46a'), ('#172033', '#67d8ef'))
 
 
 class LocalFontPreview(QWidget):
@@ -39,7 +40,7 @@ class LocalFontPreview(QWidget):
         width, height = (bounds.width() - gap) / 2, (bounds.height() - gap) / 2
         labels = (('Light', 'Dark', 'Gold', 'Cyan') if english
                   else ('밝은 배경', '어두운 배경', '금색', '하늘색'))
-        for index, (background, foreground) in enumerate(FontPreview.COLORS):
+        for index, (background, foreground) in enumerate(PREVIEW_COLORS):
             rect = QRectF(bounds.left() + index % 2 * (width + gap),
                           bounds.top() + index // 2 * (height + gap), width, height)
             painter.setPen(QPen(QColor('#d5deeb'), 1))

@@ -44,7 +44,6 @@ def run(report_path):
             from core.paths import APP_ROOT, resource_path, settings_file
             from core.settings import Settings
             from core.portrait_edit import TextOverlay
-            from core.online_fonts import bundled_catalog
             from ui.font_registry import set_layer_font_file
             from ui.text_canvas import render_portrait, text_document
             from ui.text_editor import TextEditorDialog
@@ -72,18 +71,12 @@ def run(report_path):
 
             def resources():
                 require(resource_path('아이콘.ico').is_file(), 'Missing icon')
-                require(resource_path('fonts', 'CookieRun Bold.ttf').is_file(), 'Missing bundled font')
-                families = json.loads(resource_path('font_previews.json').read_text(encoding='utf-8'))['families']
-                count = 0
-                for family in families.values():
-                    for record in family['variants']:
-                        for name in ('image', 'example_image'):
-                            if record.get(name):
-                                require(resource_path('font_previews', record[name]).is_file(), 'Missing preview ' + record[name])
-                                count += 1
-                fonts, _date = bundled_catalog()
-                return {'catalogue_fonts': len(fonts), 'preview_files_checked': count}
-            check('offline catalogue, fonts, images and translations', resources)
+                require(resource_path('fonts', 'NanumGothic-Bold.ttf').is_file(), 'Missing bundled font')
+                license_path = resource_path('font_licenses', 'NanumGothic-OFL.txt')
+                require(b'SIL OPEN FONT LICENSE' in license_path.read_bytes(), 'Missing OFL license')
+                require(not resource_path('online_font_catalog.json').exists(), 'Old online catalogue is bundled')
+                return {'bundled_font': 'NanumGothic Bold', 'OFL_license': True, 'online_catalogue': False}
+            check('bundled OFL font, license and translations', resources)
 
             def tls():
                 backends = QSslSocket.availableBackends()
@@ -106,7 +99,7 @@ def run(report_path):
                             extra_font_folders=[str(resource_path('fonts'))])
             context = AppContext.create(settings)
             install_theme(app, settings)
-            sample = resource_path('fonts', 'CookieRun Bold.ttf')
+            sample = resource_path('fonts', 'NanumGothic-Bold.ttf')
 
             def text_rendering():
                 image = QImage(320, 400, QImage.Format.Format_RGB32)
@@ -136,13 +129,13 @@ def run(report_path):
                 try:
                     require(window.preview_font(sample), 'Local preview failed')
                     require(not hasattr(window, 'selected_label'), 'Old apply caption is present')
-                    window.open_online_fonts()
-                    require(window.online_panel is not None, 'Online panel failed to initialize')
-                    return {'tabs': window.tabs.count(), 'TTF_only': window.online_panel.ttf_only}
+                    require(hasattr(window, 'font_site_button'), 'External font-site link is missing')
+                    require(not hasattr(window, 'tabs'), 'Old online tab is present')
+                    return {'local_fonts': True, 'external_font_site_link': True, 'automatic_downloads': False}
                 finally:
                     window.close()
                     window.deleteLater()
-            check('PC and online font windows initialize', font_window)
+            check('PC font window and external font-site link', font_window)
 
             def replacement():
                 window = PortraitWindow(context)

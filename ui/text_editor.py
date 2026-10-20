@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
 )
 
 from core.portrait_edit import TextOverlay
+from core.paths import resource_path
 from core.text_presets import TextPresetStore
 from ui.common import WindowSupport
 from ui.font_registry import layer_font, load_downloaded_fonts, registered_path, set_layer_font_file
@@ -22,6 +23,11 @@ from ui.text_canvas import TextCanvas, to_pillow
 
 def restore_layer_fonts(layers):
     for layer in layers:
+        # Recover drafts that referenced the removed, formerly bundled font.
+        # Do not rewrite or remove any independently supplied PC font file.
+        old = (layer.font_file or '').replace('\\', '/').casefold()
+        if old.endswith('/resources/fonts/cookierun bold.ttf'):
+            set_layer_font_file(layer, resource_path('fonts', 'NanumGothic-Bold.ttf'))
         if layer.font_file and Path(layer.font_file).is_file():
             try:
                 set_layer_font_file(layer, layer.font_file)
@@ -119,10 +125,11 @@ class TextEditorDialog(WindowSupport, QDialog):
         self.import_font_button.clicked.connect(self.import_font)
         font_buttons = QHBoxLayout()
         font_buttons.addWidget(self.import_font_button, 1)
-        self.online_font_button = QPushButton(
-            '온라인 폰트' if self.context.translations.language == 'kr' else 'Online fonts')
-        self.online_font_button.clicked.connect(self.open_online_fonts)
-        font_buttons.addWidget(self.online_font_button, 1)
+        from ui.font_sources import open_font_site, font_site_label, font_site_tooltip
+        self.font_site_button = QPushButton(font_site_label(self))
+        self.font_site_button.setToolTip(font_site_tooltip(self))
+        self.font_site_button.clicked.connect(lambda: open_font_site(self))
+        font_buttons.addWidget(self.font_site_button, 1)
         form.addRow(font_buttons)
         self.font_size = self.spin(8, 200)
         self.font_size.setSuffix(" px")
@@ -371,23 +378,6 @@ class TextEditorDialog(WindowSupport, QDialog):
             self.show_warning(self.label("font_error"))
         finally:
             self._updating = False
-
-    def open_online_fonts(self):
-        from ui.online_font_dialog import OnlineFontDialog
-        for item in self.canvas.items_by_id.values():
-            item.finish_inline_edit()
-        family = self.font_combo.currentFont()
-        self._updating = True
-        try:
-            dialog = OnlineFontDialog(self.context, self)
-            dialog.exec()
-            # Font database changes must not implicitly change the selected box.
-            self.font_combo.setCurrentFont(family)
-        finally:
-            self._updating = False
-        if dialog.selected_path is not None:
-            self.use_font_file(dialog.selected_path)
-        dialog.deleteLater()
 
     def load_latest_preset(self):
         from ui.preset_history import PresetHistoryDialog

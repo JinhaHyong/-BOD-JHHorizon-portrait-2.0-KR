@@ -40,7 +40,7 @@ class FontGameLocationTests(unittest.TestCase):
         self.window = FontWindow(self.context)
         self.addCleanup(self.window.deleteLater)
         self.addCleanup(self.window.close)
-        self.source = resource_path('fonts', 'CookieRun Bold.ttf')
+        self.source = resource_path('fonts', 'NanumGothic-Bold.ttf')
         self.window.current_font_path = self.source
         self.window.update_apply_state()
 

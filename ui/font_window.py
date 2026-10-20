@@ -1,16 +1,17 @@
-"""Font manager with local/online tabs, shared previews and a persistent apply bar."""
+"""Local font manager with previews, an external font-site link and apply bar."""
 
 from pathlib import Path
 
-from PySide6.QtCore import QSignalBlocker, QTimer, Qt
+from PySide6.QtCore import QSignalBlocker, Qt
 from PySide6.QtGui import QFont, QFontDatabase, QIcon
 from PySide6.QtWidgets import (
     QDialog, QFileDialog, QFrame, QHBoxLayout, QLabel, QListWidget, QListWidgetItem,
-    QSizePolicy, QSplitter, QTabWidget, QPushButton, QVBoxLayout, QWidget,
+    QSizePolicy, QSplitter, QPushButton, QVBoxLayout, QWidget,
 )
 
 from core.paths import default_font_folder, resource_path, system_font_folders
-from core.online_fonts import downloaded_font_label, font_storage
+from core.local_fonts import downloaded_font_label, font_storage
+from ui.font_sources import open_font_site, font_site_label, font_site_tooltip
 from ui.common import WindowSupport, center_window
 from ui.font_window_styles import MANAGER_STYLE, LIST_STYLE, PRIMARY_STYLE, SECONDARY_STYLE
 from ui.game_location_dialog import GameLocationDialog
@@ -43,7 +44,6 @@ class FontWindow(WindowSupport, QWidget):
         self.current_font_path = self.local_font_path = None
         self.preview_qfont = None
         self.preview_font_id = -1
-        self.online_panel = None
         self.local_dirty = False
         self.local_known_paths = set()
         extra = context.settings.get('extra_font_folders', [])
@@ -81,18 +81,18 @@ class FontWindow(WindowSupport, QWidget):
         layout.setSpacing(12)
         self.heading = QLabel()
         self.heading.setObjectName('fontHeading')
-        layout.addWidget(self.heading)
+        heading_row = QHBoxLayout()
+        heading_row.addWidget(self.heading, 1)
+        self.font_site_button = QPushButton()
+        self.font_site_button.setStyleSheet(SECONDARY_STYLE)
+        self.font_site_button.clicked.connect(lambda: open_font_site(self))
+        heading_row.addWidget(self.font_site_button)
+        layout.addLayout(heading_row)
         self.subtitle = QLabel()
         self.subtitle.setObjectName('fontMuted')
         self.subtitle.setWordWrap(True)
         layout.addWidget(self.subtitle)
-        self.tabs = QTabWidget()
-        self.tabs.setObjectName('fontTabs')
-        self.tabs.addTab(self.build_local_tab(), '')
-        self.online_placeholder = QWidget()
-        self.tabs.addTab(self.online_placeholder, '')
-        self.tabs.currentChanged.connect(self.tab_changed)
-        layout.addWidget(self.tabs, 1)
+        layout.addWidget(self.build_local_tab(), 1)
         footer, footer_layout = self.panel()
         footer_layout.setContentsMargins(14, 10, 14, 10)
         row = QHBoxLayout()
@@ -237,8 +237,7 @@ class FontWindow(WindowSupport, QWidget):
                 self.local_font_path = path
         else:
             self.clear_preview_font()
-        if self.tabs.currentIndex() == 0:
-            self.current_font_path = self.local_font_path
+        self.current_font_path = self.local_font_path
         self.update_local_labels()
         self.update_apply_state()
 
@@ -304,43 +303,6 @@ class FontWindow(WindowSupport, QWidget):
         if len(valid) < len(selected):
             self.show_warning(self.word('invalid_font_files'))
 
-    def open_online_fonts(self):
-        self.tabs.setCurrentIndex(1)
-
-    def tab_changed(self, index):
-        if index == 1:
-            if self.online_panel is None:
-                from ui.online_font_dialog import OnlineFontPanel
-                self.online_panel = OnlineFontPanel(self.context, self, embedded=True, ttf_only=True)
-                self.online_panel.font_ready.connect(self.online_selection_changed)
-                with QSignalBlocker(self.tabs):
-                    old = self.tabs.widget(1)
-                    self.tabs.removeTab(1)
-                    self.tabs.insertTab(1, self.online_panel, self.word('ui_online_tab'))
-                    self.tabs.setCurrentIndex(1)
-                    old.deleteLater()
-            self.current_font_path = self.online_panel.available_path()
-        else:
-            if self.local_dirty:
-                self.load_fonts()
-            self.current_font_path = self.local_font_path
-        self.update_apply_state()
-
-    def online_selection_changed(self, path):
-        if self.online_panel is None:
-            return
-        if path is not None and str(path) not in self.local_known_paths:
-            self.local_dirty = True
-            if self.tabs.currentIndex() == 0:
-                QTimer.singleShot(0, self.refresh_downloaded_fonts)
-        if self.tabs.currentIndex() == 1:
-            self.current_font_path = path
-            self.update_apply_state()
-
-    def refresh_downloaded_fonts(self):
-        if self.isVisible() and self.tabs.currentIndex() == 0 and self.local_dirty:
-            self.load_fonts()
-
     def update_apply_state(self):
         ready = self.current_font_path is not None
         self.apply_button.setEnabled(ready)
@@ -391,8 +353,8 @@ class FontWindow(WindowSupport, QWidget):
                            (self.title, 'font_list_title'), (self.preview_title, 'preview_title'),
                            (self.sample_title, 'ui_sample'), (self.location_title, 'ui_location_title')):
             label.setText(self.word(key))
-        self.tabs.setTabText(0, self.word('ui_local_tab'))
-        self.tabs.setTabText(1, self.word('ui_online_tab'))
+        self.font_site_button.setText(font_site_label(self))
+        self.font_site_button.setToolTip(font_site_tooltip(self))
         self.add_path_button.setText(self.word('ui_add_font'))
         self.refresh_btn.setText(self.word('refresh_btn'))
         self.apply_button.setText(self.word('apply_btn'))
@@ -411,15 +373,6 @@ class FontWindow(WindowSupport, QWidget):
         self.update_location()
 
     def closeEvent(self, event):
-        if self.online_panel is not None:
-            self.online_panel.shutdown()
-            with QSignalBlocker(self.tabs):
-                self.tabs.removeTab(1)
-                self.online_panel.deleteLater()
-                self.online_panel = None
-                self.online_placeholder = QWidget()
-                self.tabs.insertTab(1, self.online_placeholder, self.word('ui_online_tab'))
-                self.tabs.setCurrentIndex(0)
         self.font_list.setCurrentItem(None)
         self.local_font_path = self.current_font_path = None
         self.clear_preview_font()

@@ -1,72 +1,80 @@
-# JHnode — 검은사막 초상화·폰트 교체 프로그램
+# JHnode 3.0.1
 
-JHHorizon Portrait Manager를 PySide6로 옮기고, 초상화 텍스트 편집과 게임 폰트 변경 기능을 추가한 **JHnode 3.0**입니다. 한국어와 영어를 지원합니다.
+검은사막 초상화 교체·텍스트 편집·게임 폰트 변경 프로그램입니다.
+Windows 10 / 11 64비트에서 사용합니다. 배포 EXE는 Python 설치 없이 실행할 수 있습니다.
 
 ## 다운로드
 
-**[최신 버전 다운로드](https://github.com/JinhaHyong/-BOD-JHHorizon-portrait-2.0-KR/releases/latest)**
-
-- **[JHnode.exe](https://github.com/JinhaHyong/-BOD-JHHorizon-portrait-2.0-KR/releases/latest/download/JHnode.exe)**: 파일 하나로 실행하는 Windows 64비트 버전입니다. Python 설치나 외부 `_internal` 폴더가 필요하지 않습니다.
-- **[배포용 ZIP](https://github.com/JinhaHyong/-BOD-JHHorizon-portrait-2.0-KR/releases/latest/download/JHnode-Single-Windows-x64.zip)**: 같은 EXE와 사용 안내·라이선스 문서를 담았습니다.
-
-Windows 10 / Windows 11 64비트용입니다. 실행 시 내부 파일을 임시 폴더에 풀기 때문에 창이 열리기까지 잠시 걸릴 수 있습니다. 온라인 폰트 갱신과 다운로드에는 인터넷 연결이 필요합니다.
-
-## 주요 기능
-
-- 현재·새 초상화 목록과 미리보기, 한글 파일명 검색, 원본 자동 백업
-- 여러 텍스트 박스의 이동·크기 조절·정렬과 글꼴·색상·배경 투명도·굵게·기울임·진하게·그림자 설정
-- 사진별 편집 기억, 최근 설정 불러오기, 여러 초상화에 설정 일괄 적용
-- 내 PC·온라인 폰트 미리보기·다운로드와 게임용 TTF 적용
-- 검은사막 설치 폴더 또는 바탕화면 바로가기를 통한 적용 위치 선택
-- 라이트·다크 모드, 한국어·영어 전환
+- [단일 EXE](https://github.com/JinhaHyong/-BOD-JHHorizon-portrait-2.0-KR/releases/latest/download/JHnode.exe)
+- [EXE·안내·라이선스 ZIP](https://github.com/JinhaHyong/-BOD-JHHorizon-portrait-2.0-KR/releases/latest/download/JHnode-Single-Windows-x64.zip)
 
 ## 사용 방법
 
-1. `JHnode.exe`를 실행합니다.
-2. 현재 초상화 폴더와 새 초상화 폴더를 선택합니다.
-3. 양쪽에서 사진을 선택합니다. 새 초상화 미리보기 안의 편집 아이콘으로 텍스트를 편집할 수 있습니다.
-4. **초상화 교체**를 누릅니다. 이전 초상화는 현재 초상화 폴더의 `Backup` 폴더에 보관됩니다.
-5. 게임 폰트는 창 하단의 **Aa** 아이콘으로 변경합니다.
+1. 프로그램을 실행하고 현재 초상화 폴더와 새 초상화 폴더를 선택합니다.
+2. 왼쪽에서 교체할 캐릭터, 오른쪽에서 새 초상화를 선택합니다.
+3. 미리보기를 확인한 뒤 **초상화 교체**를 누릅니다.
 
-초상화 목록은 실제 BMP 형식이며 가로 624, 세로 804픽셀 이하인 이미지를 지원합니다. 규격을 초과하는 이미지를 임의로 축소해 저장하지 않습니다.
+기본 초상화 위치는 Windows 문서 폴더의 `Black Desert/FaceTexture`입니다.
+실제 BMP 형식이며 가로 624·세로 804픽셀 이하인 이미지를 지원합니다.
+이전 파일은 현재 초상화 폴더의 `backup` 폴더에 별도로 보관합니다.
+프로그램에는 초상화 이미지가 포함되지 않습니다.
 
-설정, 사진별 편집, 최근 설정, 다운로드 폰트는 사용자별로 저장합니다. 기존 데이터를 이어 쓰기 위해 저장 경로는 `%LOCALAPPDATA%\JHHorizon\PortraitManager`를 유지합니다.
+## 초상화 텍스트 편집
 
-## 소스 실행과 빌드
+새 초상화를 고르면 미리보기 안에 편집 아이콘이 나타납니다.
+별도 편집창에서 텍스트 박스를 만들고 마우스로 이동하거나 크기를 바꿀 수 있습니다.
+박스를 더블클릭해 내용을 입력하고 글꼴·크기·색상·정렬·굵게·기울임·진하게·그림자,
+박스 배경색과 불투명도를 조절합니다. 박스 안의 글자는 세로 중앙 정렬합니다.
 
-현재 버전의 진입점은 **`main.py`**입니다. 과거 PyQt5 버전인 `JHHorizon portrait 2.0.py`는 기존 코드 보관용으로 남겼습니다.
+사진별 편집 내용과 최근 설정을 저장하며, 같은 모양·위치의 설정은 중복 표시하지 않습니다.
+여러 초상화에 설정을 적용할 때 박스 개수가 같으면 사진별 기존 내용을 유지합니다.
+개수가 다르면 확인 후 현재 박스 설정으로 덮어쓰고 내용을 비웁니다.
+편집 결과를 게임에 적용하려면 메인 화면에서 초상화 교체를 진행합니다.
 
-Python 3.12 x64 환경에서:
+## 폰트 변경과 폰트 찾기
 
-```powershell
-python -m venv .venv
-.venv\Scripts\python -m pip install -r requirements.txt
-.venv\Scripts\python main.py
-```
+메인 화면 하단 언어 선택 옆 **Aa** 아이콘으로 폰트 변경창을 엽니다.
+PC에 있는 실제 TTF 파일을 미리 보고 선택한 뒤 **폰트 적용**을 누릅니다.
+별도 파일은 **폰트 추가**로 불러옵니다. 게임에는 `prestringtable/font/pearl.ttf`로 복사하며,
+기존 파일은 백업합니다. 검은사막 실행 파일로 설치 위치를 확인한 뒤 복사합니다.
+위치를 찾지 못하면 설치 폴더나 게임 바로가기를 선택할 수 있습니다.
 
-단일 EXE·폴더형 EXE 빌드는 **[BUILD-EXE.md](BUILD-EXE.md)**, 자세한 구현·사용 설명은 [개발 문서](docs/DEVELOPMENT.md)를 참고하세요.
+폰트 변경창과 텍스트 편집창의 **눈누 폰트 찾기 ↗**를 누르면 기본 브라우저에서
+https://noonnu.cc/ 를 엽니다. 폰트 제작자의 이용 조건을 확인한 뒤 배포처에서 직접 받고,
+프로그램의 폰트 추가로 불러오세요. 텍스트 편집은 TTF·OTF, 게임 변경은 실제 TTF를 지원합니다.
+눈누에 소개된 모든 폰트가 게임 사용을 허용하는 것은 아닙니다.
 
-| 경로 | 역할 |
-| --- | --- |
-| `main.py` | 앱 시작 |
-| `core/` | 설정, 경로, 텍스트·폰트 데이터 |
-| `services/` | 이미지 로딩, 백업·교체, 폰트 다운로드·적용 |
-| `ui/` | PySide6 화면과 편집 도구 |
-| `resources/` | 번역, 아이콘, 기본 글꼴, 폰트 미리보기 |
-| `tests/` | 임시 데이터를 사용하는 기능 검사 |
+3.0.1에서는 내부 온라인 목록·웹 미리보기·자동 다운로드 기능과 그 리소스를 제거했습니다.
+클릭하지 않으면 폰트 사이트에 접속하지 않습니다.
+사용자가 이전에 설치하거나 다운로드한 파일, 게임에 이미 적용한 폰트는 자동 삭제하지 않습니다.
 
-## 검증
+## 테마·언어·설정
 
-소스 테스트 **82개**를 통과했습니다. Python이 없는 Windows Sandbox에 **단일 EXE만 복사**해 두 차례 검사했으며, 각 실행의 **8개 배포 검사**와 일반 화면 실행을 확인했습니다. 임시 초상화·설정·가짜 게임 경로를 사용했고 실제 게임 파일은 검사에서 변경하지 않았습니다.
+하단 해·달 아이콘으로 라이트·다크 모드를 바꾸고 한국어·영어를 선택합니다.
+설정은 기존 호환 경로인 `%LOCALAPPDATA%/JHHorizon/PortraitManager`에 저장합니다.
+EXE를 바꾸더라도 같은 사용자 계정의 설정을 유지합니다.
+기존 기본 포함 폰트 경로를 참조하는 텍스트 설정은 나눔고딕 Bold로 불러옵니다.
 
-실제 게임 클라이언트를 실행한 뒤의 반영 여부는 사용 환경에서 확인해야 합니다. 현재 기본 창 크기는 830×910입니다.
+## 라이선스
 
-## 라이선스와 제작자
+기본 포함 폰트와 소개 예시는 **나눔고딕 Bold** 원본을 사용합니다.
+저작권은 NHN Corporation에 있으며 SIL Open Font License 1.1로 제공됩니다.
+저작권·라이선스 원문은 `resources/font_licenses/NanumGothic-OFL.txt`와
+`build_support/licenses/NanumGothic/OFL.txt`에 있습니다.
+다른 직접 추가한 글꼴은 각 제작자의 게임 사용 등 이용 조건을 확인해야 합니다.
 
-Copyright (c) 2024 김진하 (Jinha Kim / JinhaHyong)
+Python·PySide6/Qt·Pillow 등의 고지와 라이선스는 배포 ZIP의 `licenses` 및
+`THIRD-PARTY-NOTICES.txt`에 포함됩니다. 프로그램 소스의 라이선스는 `LICENSE.md`를 확인하세요.
 
-기존 [CC BY-NC 4.0 라이선스](LICENSE.md)를 유지합니다. 라이브러리와 폰트에는 각 구성요소의 라이선스가 적용됩니다. [구성요소 고지문](build_support/THIRD-PARTY-NOTICES.txt)을 참고하고 재배포할 때는 안내·라이선스 문서를 함께 보관하세요.
+## 개발·빌드
 
-## English
+Python 3.12 64비트에서 `requirements.txt`를 설치하고 `python main.py`로 실행합니다.
+소스 구조는 `core`(설정·데이터), `services`(파일 처리), `ui`(화면)로 나뉩니다.
+폰트 사이트 연결은 `ui/font_sources.py`, 기존 사용자 폰트 저장 경로는 `core/local_fonts.py`입니다.
 
-JHnode 3.0 is the PySide6 successor to JHHorizon Portrait Manager. It adds draggable portrait text layers, reusable settings, batch styling, local and online font selection, game font replacement, and light/dark themes. Download the standalone Windows x64 executable from [Releases](https://github.com/JinhaHyong/-BOD-JHHorizon-portrait-2.0-KR/releases/latest). No separate Python installation is required. The current source entry point is `main.py`; the original 2.0 script is retained for reference.
+테스트: `python -m unittest discover -s tests -v`
+빌드 준비: `requirements-build.txt` 설치 후 `build_exe.ps1 -Mode single` 또는 `-Mode folder`.
+빌드 시 `JHnode.spec`은 개인 설정·게임 이미지·사용자 다운로드 파일을 포함하지 않습니다.
+`build_support/deployment_check.py`는 패키지 검증용 임시 환경에서만 파일 작업을 합니다.
+
+배포 전 실제 단일 EXE를 Python이 없는 Windows 환경에서 검증합니다.

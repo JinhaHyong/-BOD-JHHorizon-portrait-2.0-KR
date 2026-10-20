@@ -33,15 +33,18 @@ PyInstaller 6.22.3 (packaging / bootloader)
   Source: https://github.com/pyinstaller/pyinstaller
   License: licenses/PyInstaller
 
-CookieRun Bold (bundled application font)
-  https://www.cookierunfont.com/
-  Official license: licenses/CookieRun/License_ko_en.pdf
+NanumGothic Bold (bundled, unmodified font)
+  Copyright (c) 2010, NHN Corporation
+  SIL Open Font License 1.1: licenses/NanumGothic/OFL.txt
+  https://github.com/google/fonts/tree/main/ofl/nanumgothic
 
-Online font metadata and preview images
-  https://seulkikaang.github.io/korean-vibe-fonts/
-  https://github.com/skt-t1-byungi/noonnu-fonts
-  Downloaded fonts remain subject to each font author's license. The bundle
-  contains preview images and catalogue data, not all downloadable font files.
+External font discovery
+  https://noonnu.cc/
+  The program opens the site in the user's browser only after a click.
+  It does not embed the site, maintain a font catalogue, scrape previews, or
+  automatically download fonts. Users obtain fonts from their official sources.
+  User-provided PC fonts remain subject to their respective licenses, including
+  any restrictions on game use. Previously downloaded user files are not deleted.
 
 Microsoft Visual C++ runtime (app-local DLLs)
   https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist

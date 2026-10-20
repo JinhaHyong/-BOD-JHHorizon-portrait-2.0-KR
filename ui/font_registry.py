@@ -4,7 +4,7 @@ from pathlib import Path
 
 from PySide6.QtGui import QFont, QFontDatabase, QRawFont
 
-from core.online_fonts import font_storage
+from core.local_fonts import font_storage
 
 
 _registered_fonts = {}

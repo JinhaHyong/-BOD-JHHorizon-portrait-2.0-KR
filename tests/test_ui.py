@@ -156,7 +156,7 @@ class WindowTests(unittest.TestCase):
     def test_font_preview_keeps_path_and_apply_uses_it(self):
         self.window.open_font_manager()
         window = self.window.font_window
-        bundled = resource_path("fonts", "CookieRun Bold.ttf")
+        bundled = resource_path("fonts", "NanumGothic-Bold.ttf")
         for index in range(window.font_list.count()):
             item = window.font_list.item(index)
             if Path(item.data(Qt.ItemDataRole.UserRole)) == bundled:
@@ -180,7 +180,7 @@ class WindowTests(unittest.TestCase):
     def test_cancelled_game_folder_selection_creates_nothing(self):
         self.window.open_font_manager()
         window = self.window.font_window
-        window.current_font_path = resource_path("fonts", "CookieRun Bold.ttf")
+        window.current_font_path = resource_path("fonts", "NanumGothic-Bold.ttf")
         with patch("ui.font_window.GameLocationDialog") as selector:
             selector.return_value.exec.return_value = QDialog.DialogCode.Rejected
             selector.return_value.game_root = None
@@ -203,7 +203,7 @@ class WindowTests(unittest.TestCase):
     def test_selecting_game_installation_applies_and_remembers_font_folder(self):
         self.window.open_font_manager()
         window = self.window.font_window
-        window.current_font_path = resource_path("fonts", "CookieRun Bold.ttf")
+        window.current_font_path = resource_path("fonts", "NanumGothic-Bold.ttf")
         installation = self.root / "selected-game"
         installation.mkdir()
         (installation / 'BlackDesertLauncher.exe').touch()

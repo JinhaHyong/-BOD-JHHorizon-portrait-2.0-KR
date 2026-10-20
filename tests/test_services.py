@@ -153,7 +153,7 @@ class ServiceTests(unittest.TestCase):
         source.unlink()  # No image handle remains open on Windows.
 
     def test_font_discovery_deduplicates_and_excludes_non_truetype(self):
-        data = resource_path("fonts", "CookieRun Bold.ttf").read_bytes()
+        data = resource_path("fonts", "NanumGothic-Bold.ttf").read_bytes()
         (self.root / "A.ttf").write_bytes(data)
         (self.root / "b.OTF").write_bytes(data)
         (self.root / "renamed.ttf").write_bytes(b"OTTO" + data[4:])
@@ -164,7 +164,7 @@ class ServiceTests(unittest.TestCase):
     def test_first_font_install_and_replacement_backup(self):
         service = FontService()
         source = self.root / "source.ttf"
-        original = resource_path("fonts", "CookieRun Bold.ttf").read_bytes()
+        original = resource_path("fonts", "NanumGothic-Bold.ttf").read_bytes()
         replacement = original + b"replacement fixture"
         source.write_bytes(original)
         folder = self.root / "game" / "prestringtable" / "font"
@@ -179,7 +179,7 @@ class ServiceTests(unittest.TestCase):
 
     def test_renamed_otf_does_not_replace_existing_game_font(self):
         source = self.root / "renamed.ttf"
-        original = resource_path("fonts", "CookieRun Bold.ttf").read_bytes()
+        original = resource_path("fonts", "NanumGothic-Bold.ttf").read_bytes()
         source.write_bytes(b"OTTO" + original[4:])
         folder = self.root / "game" / "prestringtable" / "font"
         folder.mkdir(parents=True)

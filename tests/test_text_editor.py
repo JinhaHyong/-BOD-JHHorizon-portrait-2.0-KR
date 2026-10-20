@@ -191,10 +191,10 @@ class TextEditorTests(unittest.TestCase):
     def test_font_file_import_renders_and_keeps_registration_after_close(self):
         editor = self.editor()
         with patch("ui.text_editor.QFileDialog.getOpenFileName",
-                   return_value=(str(resource_path("fonts", "CookieRun Bold.ttf")), "")):
+                   return_value=(str(resource_path("fonts", "NanumGothic-Bold.ttf")), "")):
             editor.import_font_button.click()
         editor.text_input.setPlainText("Font")
-        self.assertIn("CookieRun", editor.layers()[0].font_family)
+        self.assertIn("Nanum", editor.layers()[0].font_family)
         layers = editor.layers()
         editor.close()
         self.assertFalse(render_portrait(self.base, layers).isNull())
