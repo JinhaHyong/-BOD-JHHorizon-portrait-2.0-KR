@@ -1,0 +1,50 @@
+JHnode - bundled component notices
+
+This folder distribution uses dynamically loaded Qt/PySide6 libraries.
+Keep _internal and its licenses directory with JHnode.exe.
+No Qt or PySide6 source was modified for this package.
+The license paths below are relative to _internal.
+
+Python 3.12
+  https://www.python.org/
+  Source: https://www.python.org/downloads/source/
+  License: licenses/Python
+
+PySide6 / Shiboken6 6.11.2 and Qt 6.11.2
+  https://www.qt.io/qt-for-python
+  Source: https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-6.11.2-src/
+  Qt source: https://download.qt.io/official_releases/qt/6.11/6.11.2/submodules/
+  PySide6 and Qt include open-source licensing choices. Applicable component
+  notices are retained under licenses/PySide6*, licenses/shiboken6 and licenses/Qt.
+  LGPL text: licenses/Qt/LGPL-3.0-only.txt
+  Bundled third-party attribution pages: licenses/Qt/third-party/index.html
+  Source repository: https://code.qt.io/pyside/pyside-setup.git/
+  Users may replace the dynamically loaded compatible Qt/PySide libraries.
+  Reverse engineering for debugging modifications to LGPL-covered libraries
+  is permitted under the applicable license.
+
+Pillow 12.3.0
+  https://python-pillow.github.io/
+  Source: https://github.com/python-pillow/Pillow
+  License and bundled codec notices: licenses/Pillow
+
+PyInstaller 6.22.3 (packaging / bootloader)
+  https://pyinstaller.org/
+  Source: https://github.com/pyinstaller/pyinstaller
+  License: licenses/PyInstaller
+
+CookieRun Bold (bundled application font)
+  https://www.cookierunfont.com/
+  Official license: licenses/CookieRun/License_ko_en.pdf
+
+Online font metadata and preview images
+  https://seulkikaang.github.io/korean-vibe-fonts/
+  https://github.com/skt-t1-byungi/noonnu-fonts
+  Downloaded fonts remain subject to each font author's license. The bundle
+  contains preview images and catalogue data, not all downloadable font files.
+
+Microsoft Visual C++ runtime (app-local DLLs)
+  https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist
+  Distributed runtime DLLs are obtained from the installed Qt/PySide6 package.
+  The optional official Microsoft installer is supplied separately in the
+  preparation kit; it is not automatically installed by JHnode.

@@ -1,0 +1,18 @@
+.venv/
+.venv-build/
+__pycache__/
+*.py[cod]
+build/
+dist/
+*.spec
+!JHnode.spec
+
+# Local settings, output packages and user-owned media
+*.exe
+*.zip
+settings.json*
+*.write.lock
+*.instance.lock
+새 초상화/
+backup/
+Backup/
